@@ -20,9 +20,10 @@ describe Textris::Delivery::Mail do
 
     Rails = OpenStruct.new(
       :application => MyAppName::Application.new(
-        :config => OpenStruct.new
+        :config => OpenStruct.new,
+        class: OpenStruct.new(module_parent_name: 'MyAppName')
       ),
-      :env => 'test'
+      :env => 'test',
     )
 
     class FakeMail

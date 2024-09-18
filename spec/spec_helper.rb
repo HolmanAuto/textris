@@ -8,6 +8,7 @@ require 'textris/delay/sidekiq/missing'
 require 'active_support/testing/time_helpers'
 
 CodeClimate::TestReporter.configuration.logger = Logger.new("/dev/null")
+Sidekiq.strict_args!(false)
 
 if Scrutinizer::Ocular.should_run? ||
     CodeClimate::TestReporter.run? ||
