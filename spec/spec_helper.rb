@@ -34,6 +34,10 @@ end
 require_relative '../lib/textris'
 
 RSpec.configure do |config|
+  config.before(:suite) do
+    ApplicationController = ActionController::Base.renderer.new
+  end
+
   config.include ActiveSupport::Testing::TimeHelpers
 
   config.expect_with :rspec do |expectations|
