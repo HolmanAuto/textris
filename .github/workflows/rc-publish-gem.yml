@@ -1,0 +1,34 @@
+name: Publish Release Candidate Gem Package
+
+on:
+  # Trigger the workflow on any tag push
+  push:
+    tags:
+      - '*'
+
+jobs:
+  extract_version:
+    runs-on: ubuntu-latest
+    outputs:
+      gem_version: ${{ steps.extract_version.outputs.gem_version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Extract version from tag
+        id: extract_version
+        run: |
+          GEM_VERSION=$(grep '^[[:space:]]*textris (' Gemfile.lock | awk '{print $2}' | tr -d '()')
+          echo "gem_version=$GEM_VERSION" >> $GITHUB_OUTPUT
+          if [ "${{ github.ref_name }}" != $GEM_VERSION ]; then
+            echo "Your tag ${{ github.ref_name }} does not match the gem version $GEM_VERSION"
+            exit 1
+          fi
+  gem_publish:
+    needs: extract_version
+    if: endsWith(github.ref, '-rc')
+    uses: holmanauto/ci-workflows/.github/workflows/gem-package-publish.yml@main
+    secrets: inherit  
+    with:
+      gem-name: textris
+      npm-scope: ${{ vars.NPM_SCOPE }}
+      asset-build-command: echo "No assets to build for this gem"

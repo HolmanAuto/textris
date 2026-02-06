@@ -1,0 +1,14 @@
+name: Publish Gem Package
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'lib/textris/version.rb'
+jobs:
+  gem_publish:
+    uses: holmanauto/ci-workflows/.github/workflows/gem-package-publish.yml@main
+    secrets: inherit
+    with:
+      gem-name: textris
+      npm-scope: ${{ vars.NPM_SCOPE }}
